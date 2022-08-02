@@ -1,7 +1,6 @@
-'use string';
+'use strict';
 
 (() => {
-  // const FIGURES_ENG = ['rock', 'scissors', 'paper'];
   const FIGURES_RUS = ['камень', 'ножницы', 'бумага'];
 
   const getRandomIntInclusive = (min, max) => {
@@ -16,108 +15,66 @@
       computer: 0,
     };
 
-    const exit = () => {
-      let choice = confirm('Точно ли Вы хотите выйти?')
-      if (choice === true) {
-        alert(`Результат игр:\nКомпьютер: ${result.computer}\nВы: ${result.player}\n`);
-        console.log(`Результат игр:\nКомпьютер: ${result.computer}\nВы: ${result.player}\n`);
-        return;
-      } else {
-        return start();
-      }
-    };
-
-    const userDateTransform = (string) => {
-      switch (true) {
-        case (string === 'бумага' || string === 'бум' || string === 'б' || string === 'Б'):
-          string = 'бумага';
-          break;
-        case (string === 'ножницы' || string === 'нож' || string === 'н' || string === 'Н'):
-          string = 'ножницы';
-          break;
-        case (string === 'камень' || string === 'кам' || string === 'к' || string === 'К'):
-          string = 'камень';
-          break;
-        default:
-          break;
-      };
-      return string;
-    };
-
     return function start() {
-
-      const userData = () => {
-        let data = prompt('камень, ножницы, бумага?', '');
-        return userDateTransform(data);
+      const exit = () => {
+        const choice = confirm('Точно ли Вы хотите выйти?');
+        if (choice === true) {
+          alert(`Результат игр:
+          Компьютер: ${result.computer}\nВы: ${result.player}\n`);
+          return;
+        } else {
+          return start();
+        }
       };
 
-      const newUserData = userData();
-      const computerDate = FIGURES_RUS[(getRandomIntInclusive(0, (FIGURES_RUS.length - 1)))];
-      const resultPrint = `Вы: ${newUserData}\nКомпьютер: ${computerDate}`;
+      const userDateTransform = (string) => {
+        switch (true) {
+          case (string === null):
+            exit();
+            break;
+          case (FIGURES_RUS.indexOf(string) === -1):
+            start();
+            break;
+          default:
+            return FIGURES_RUS.indexOf(string);
+        }
+      };
+
+      const data = prompt('камень, ножницы, бумага?', '');
+      const newUserData = userDateTransform(data);
+      const computerDate = getRandomIntInclusive(0, (FIGURES_RUS.length - 1));
+      const resultPrint =
+      `Вы: ${data}\nКомпьютер: ${FIGURES_RUS[computerDate]}`;
       const winOrDraw = {
         player: 'Вы выиграли',
         computer: 'Компьютер выиграл',
         draw: 'Ничья',
       };
 
-      switch (true) {
-        case (newUserData === computerDate):
-          alert(`${resultPrint}\n${winOrDraw.draw}`);
-          console.log('ничья')
-          start();
-          break;
-        case (newUserData === 'камень' && computerDate === 'бумага'):
-          alert(`${resultPrint}\n${winOrDraw.computer}`);
-          console.log('камень бумага')
-          result.computer += 1;
-          start();
-          break;
-        case (newUserData === 'камень' && computerDate === 'ножницы'):
-          alert(`${resultPrint}\n${winOrDraw.player}`);
-          console.log('камень ножницы')
-          result.player += 1;
-          start();
-          break;
-        case (newUserData === 'ножницы' && computerDate === 'бумага'):
-          alert(`${resultPrint}\n${winOrDraw.player}`);
-          console.log('ножницы бумага')
-          result.player += 1;
-          start();
-          break;
-        case (newUserData === 'ножницы' && computerDate === 'камень'):
-          alert(`${resultPrint}\n${winOrDraw.computer}`);
-          console.log('ножницы камень')
-          result.computer += 1;
-          start();
-          break;
-        case (newUserData === 'бумага' && computerDate === 'камень'):
-          alert(`${resultPrint}\n${winOrDraw.player}`);
-          console.log('бумага камень')
-          result.player += 1;
-          start();
-          break;
-        case (newUserData === 'бумага' && computerDate === 'ножницы'):
-          alert(`${resultPrint}\n${winOrDraw.computer}`);
-          console.log('бумага камень')
-          result.computer += 1;
-          start();
-          break;
-          case (newUserData === null):
-            exit();
-            return;
-        default:
-          start();
+      const gameProcess = (a, b) => {
+        switch (true) {
+          case (a === b):
+            alert(`${resultPrint}\n${winOrDraw.draw}`);
+            start();
+            break;
+          case (a === 0 && b === 1 ||
+            a === 1 && b === 2):
+            alert(`${resultPrint}\n${winOrDraw.user}`);
+            result.user += 1;
+            start();
+            break;
+          case (a === undefined):
+            break;
+          default:
+            alert(`${resultPrint}\n${winOrDraw.computer}`);
+            result.computer += 1;
+            start();
+            break;
+        }
       };
+      gameProcess(newUserData, computerDate);
     };
   };
 
   window.RPS = game;
 })();
-
-
-
-// const resultSum = window.factorySum(3);
-
-// console.log(resultSum(5));
-// console.log(resultSum(6));
-
